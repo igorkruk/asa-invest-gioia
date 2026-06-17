@@ -61,7 +61,7 @@ export default async function handler(req, res) {
       const arr = Array.isArray(data) ? data : (data.tasks || []);
       arr.forEach(t => {
         if (dealUser[t.deal_id] !== undefined) {
-          tasks.push({ type: t.type || 'task', done: t.done === true, done_date: t.done_date || null, user: dealUser[t.deal_id] || '—' });
+          tasks.push({ type: t.type || 'task', done: t.done === true, done_date: t.done_date || null, due: t.date || t.time || t._date || null, user: dealUser[t.deal_id] || '—' });
         }
       });
       tmore = data.has_more === true && arr.length > 0;
