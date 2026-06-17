@@ -72,12 +72,31 @@
   .lossbox .head{font-size:12px;color:var(--muted);margin-bottom:12px}
   .lrow{display:flex;justify-content:space-between;font-size:12.5px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
   .errbox{background:rgba(232,121,90,.12);border:1px solid rgba(232,121,90,.4);color:#ffd9cc;padding:16px;border-radius:12px}
+  .login-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(1000px 600px at 50% -10%,#1d3a55 0%,var(--navy-800) 45%,var(--navy-900) 100%)}
+  .login-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:36px 30px;width:330px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+  .login-logo{font-family:'Montserrat';font-weight:800;font-size:24px}
+  .login-sub{color:var(--muted);font-size:12.5px;margin:4px 0 24px}.login-sub .gold{color:var(--gold)}
+  .login-card input{width:100%;background:var(--card-2);border:1px solid var(--line-soft);color:var(--text);border-radius:10px;padding:12px 14px;font-family:'Poppins';font-size:14px;margin-bottom:12px}
+  .login-card input:focus{outline:none;border-color:var(--gold)}
+  .login-card button{width:100%;background:var(--gold);color:#1a1206;border:none;border-radius:10px;padding:12px;font-family:'Montserrat';font-weight:700;font-size:14px;cursor:pointer;margin-top:6px}
+  .login-card button:disabled{opacity:.6;cursor:default}
+  .login-err{color:var(--red);font-size:12.5px;margin-top:14px;min-height:16px}
   .foot{text-align:center;color:var(--muted);font-size:11.5px;margin-top:30px}.foot .gold{color:var(--gold)}
   @media(max-width:860px){.grid2,.kpis,.lossgrid,.taskgrid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.brow{grid-template-columns:120px 1fr 40px}.crow{grid-template-columns:120px 1fr 78px}}
   @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
+<div id="login" class="login-overlay">
+  <div class="login-card">
+    <div class="login-logo">Asa Invest</div>
+    <div class="login-sub">Acesso ao painel · <span class="gold">Gioia</span></div>
+    <input id="lg-user" placeholder="Usuário" autocomplete="username">
+    <input id="lg-pass" type="password" placeholder="Senha" autocomplete="current-password">
+    <button id="lg-btn">Entrar</button>
+    <div class="login-err" id="lg-err"></div>
+  </div>
+</div>
 <div class="wrap">
   <div class="topbar">
     <div><h1>Asa Invest</h1><div class="sub">Funil de Vendas · RD CRM · <span class="gold">engine Gioia</span></div></div>
@@ -93,6 +112,7 @@
           <button data-mode="custom">Personalizado</button>
         </div>
         <button class="btn" onclick="loadData()">↻</button>
+        <button class="btn" id="logout-btn" title="Sair">Sair</button>
       </div>
       <div class="custom-range" id="range">
         <input type="date" id="dt-from"><span style="color:var(--muted)">até</span><input type="date" id="dt-to">
@@ -271,7 +291,37 @@ document.getElementById('seg').addEventListener('click',e=>{const b=e.target.clo
 document.getElementById('dt-apply').addEventListener('click',()=>{const f=document.getElementById('dt-from').value,t=document.getElementById('dt-to').value;if(!f||!t){alert('Escolha as duas datas.');return;}P={mode:'custom',days:0,from:f,to:t};render();});
 document.getElementById('cool-seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#cool-seg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');COOL=Number(b.dataset.cool);render();});
 
-async function loadData(){document.getElementById('status').textContent='Atualizando…';try{const res=await fetch('/api/deals');if(!res.ok)throw new Error('HTTP '+res.status);const data=await res.json();if(data.error)throw new Error(data.error);ALL=data.deals||[];TASKS=data.tasks||[];STAGE_ORDER=data.stage_order||[];buildUserMenu();document.getElementById('dash').style.display='block';render();document.getElementById('status').textContent=`${fmt(ALL.length)} negócios · atualizado às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;}catch(e){document.getElementById('status').innerHTML=`<div class="errbox">Não consegui carregar: ${e.message}. Tenta atualizar; se persistir, me chama.</div>`;}}
+function showLogin(){document.getElementById('login').style.display='flex';document.getElementById('dash').style.display='none';}
+function hideLogin(){document.getElementById('login').style.display='none';}
+async function doLogin(){
+  const user=document.getElementById('lg-user').value.trim(),pass=document.getElementById('lg-pass').value,err=document.getElementById('lg-err'),btn=document.getElementById('lg-btn');
+  err.textContent='';btn.disabled=true;
+  try{
+    const r=await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user,pass})});
+    const d=await r.json().catch(()=>({}));
+    if(r.ok&&d.token){sessionStorage.setItem('asa_token',d.token);document.getElementById('lg-pass').value='';hideLogin();loadData();}
+    else err.textContent=d.error||'Não foi possível entrar.';
+  }catch(e){err.textContent='Erro de conexão. Tenta de novo.';}
+  btn.disabled=false;
+}
+document.getElementById('lg-btn').addEventListener('click',doLogin);
+document.getElementById('lg-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('logout-btn').addEventListener('click',()=>{sessionStorage.removeItem('asa_token');showLogin();});
+
+async function loadData(){
+  const tk=sessionStorage.getItem('asa_token');
+  if(!tk){showLogin();return;}
+  document.getElementById('status').textContent='Atualizando…';
+  try{
+    const res=await fetch('/api/deals',{headers:{Authorization:'Bearer '+tk}});
+    if(res.status===401){sessionStorage.removeItem('asa_token');showLogin();return;}
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();if(data.error)throw new Error(data.error);
+    ALL=data.deals||[];TASKS=data.tasks||[];STAGE_ORDER=data.stage_order||[];buildUserMenu();
+    hideLogin();document.getElementById('dash').style.display='block';render();
+    document.getElementById('status').textContent=`${fmt(ALL.length)} negócios · atualizado às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
+  }catch(e){document.getElementById('status').innerHTML=`<div class="errbox">Não consegui carregar: ${e.message}. Tenta atualizar; se persistir, me chama.</div>`;}
+}
 loadData();
 </script>
 </body>
