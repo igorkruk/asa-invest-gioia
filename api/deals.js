@@ -1,7 +1,30 @@
+import crypto from 'crypto';
 export const config = { runtime: 'nodejs' };
+
+function sign(body, secret) { return crypto.createHmac('sha256', secret).update(body).digest('base64url'); }
+function verifyToken(token, secret) {
+  if (!token || !secret) return false;
+  const parts = token.split('.');
+  if (parts.length !== 2) return false;
+  const [body, sig] = parts;
+  const expected = sign(body, secret);
+  if (sig.length !== expected.length) return false;
+  try { if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) return false; } catch { return false; }
+  try { const p = JSON.parse(Buffer.from(body, 'base64url').toString()); return p.exp > Date.now(); } catch { return false; }
+}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+
+  // --- Autenticação: sem token válido, não busca nada no CRM ---
+  const authHeader = req.headers.authorization || '';
+  const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+  if (!verifyToken(bearer, process.env.AUTH_SECRET)) {
+    res.status(401).json({ error: 'unauthorized' });
+    return;
+  }
+
   const TOKEN = process.env.RD_TOKEN;
   const PIPELINE_ID = process.env.RD_PIPELINE_ID;
   const BASE = 'https://crm.rdstation.com/api/v1';
