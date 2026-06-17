@@ -67,12 +67,13 @@
   td{padding:9px 8px 9px 0;border-bottom:1px solid rgba(255,255,255,.04)}td.name{color:var(--text)}
   .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px}.pill.warn{background:rgba(232,121,90,.15);color:var(--red)}
   .lossgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .taskgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
   .lossbox h3{font-size:13px;font-weight:600;margin-bottom:10px}
   .lossbox .head{font-size:12px;color:var(--muted);margin-bottom:12px}
   .lrow{display:flex;justify-content:space-between;font-size:12.5px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
   .errbox{background:rgba(232,121,90,.12);border:1px solid rgba(232,121,90,.4);color:#ffd9cc;padding:16px;border-radius:12px}
   .foot{text-align:center;color:var(--muted);font-size:11.5px;margin-top:30px}.foot .gold{color:var(--gold)}
-  @media(max-width:860px){.grid2,.kpis,.lossgrid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.brow{grid-template-columns:120px 1fr 40px}.crow{grid-template-columns:120px 1fr 78px}}
+  @media(max-width:860px){.grid2,.kpis,.lossgrid,.taskgrid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.brow{grid-template-columns:120px 1fr 40px}.crow{grid-template-columns:120px 1fr 78px}}
   @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -132,9 +133,10 @@
         <button data-cool="7">7 dias</button><button data-cool="30" class="active">30 dias</button><button data-cool="90">90 dias</button></div>
       <div id="cool"></div></div>
     <!-- REQ 4 tarefas -->
-    <div class="panel"><h2>Tarefas</h2><div class="desc">Em andamento ignora o filtro de data · concluídas respeitam o período</div>
-      <div class="lossgrid">
+    <div class="panel"><h2>Tarefas</h2><div class="desc">Em andamento e atrasadas ignoram o filtro de data · concluídas respeitam o período</div>
+      <div class="taskgrid">
         <div class="lossbox"><h3 style="color:var(--gold)">Em andamento <span id="task-pend-total" style="font-family:Montserrat"></span></h3><div id="task-pend"></div></div>
+        <div class="lossbox"><h3 style="color:var(--red)">Atrasadas <span id="task-late-total" style="font-family:Montserrat"></span></h3><div id="task-late"></div></div>
         <div class="lossbox"><h3 style="color:var(--green)">Concluídas no período <span id="task-done-total" style="font-family:Montserrat"></span></h3><div id="task-done"></div></div>
       </div></div>
     <!-- REQ 3 -->
@@ -234,12 +236,15 @@ function render(){
   // Req4 tarefas
   const T=SEL_USERS.length?TASKS.filter(t=>SEL_USERS.includes(t.user)):TASKS;
   const pend=T.filter(t=>!t.done);
+  const late=pend.filter(t=>t.due&&new Date(t.due)<new Date());
   const doneT=T.filter(t=>t.done&&inWindow(t.done_date));
   const byType=list=>{const m={};list.forEach(t=>{const k=TYPE_LABEL[t.type]||t.type;m[k]=(m[k]||0)+1;});return Object.entries(m).sort((a,b)=>b[1]-a[1]);};
   const typeRows=e=>e.length?e.map(([k,n])=>`<div class="lrow"><span>${k}</span><span style="font-family:Montserrat;font-weight:600">${n}</span></div>`).join(''):'<div class="ph">Nenhuma.</div>';
   document.getElementById('task-pend-total').textContent='· '+fmt(pend.length);
+  document.getElementById('task-late-total').textContent='· '+fmt(late.length);
   document.getElementById('task-done-total').textContent='· '+fmt(doneT.length);
   document.getElementById('task-pend').innerHTML=typeRows(byType(pend));
+  document.getElementById('task-late').innerHTML=typeRows(byType(late));
   document.getElementById('task-done').innerHTML=typeRows(byType(doneT));
 
   // Req3
