@@ -9,80 +9,58 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy-900:#0a1c2c; --navy-800:#10293c; --card:#163049; --card-2:#1b3954;
+    --navy-900:#0a1c2c; --navy-800:#10293c; --card:#163049;
     --line:rgba(201,162,75,.16); --line-soft:rgba(255,255,255,.07);
-    --gold:#c9a24b; --gold-soft:#e3c789; --text:#eaf1f7; --muted:#8ca6bd;
-    --green:#34c08a; --red:#e8795a;
+    --gold:#c9a24b; --gold-soft:#e3c789; --text:#eaf1f7; --muted:#8ca6bd; --green:#34c08a; --red:#e8795a;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    font-family:'Poppins',sans-serif; color:var(--text); min-height:100vh;
-    background:radial-gradient(1200px 700px at 50% -10%, #1d3a55 0%, var(--navy-800) 45%, var(--navy-900) 100%);
-    padding:28px 20px 60px;
-  }
+  body{font-family:'Poppins',sans-serif;color:var(--text);min-height:100vh;padding:28px 20px 60px;
+    background:radial-gradient(1200px 700px at 50% -10%, #1d3a55 0%, var(--navy-800) 45%, var(--navy-900) 100%);}
   .wrap{max-width:1180px;margin:0 auto}
-  h1,h2,h3,.num{font-family:'Montserrat',sans-serif}
-  .topbar{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:6px}
+  h1,h2,.num{font-family:'Montserrat',sans-serif}
+  .topbar{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px}
   h1{font-size:26px;font-weight:800;letter-spacing:.3px}
-  .sub{color:var(--muted);font-size:13px;margin-top:3px}
-  .sub .gold{color:var(--gold)}
+  .sub{color:var(--muted);font-size:13px;margin-top:3px}.sub .gold{color:var(--gold)}
   .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .seg{display:flex;background:var(--card);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}
   .seg button{background:none;border:none;color:var(--muted);font-family:'Poppins';font-size:12.5px;padding:8px 14px;cursor:pointer}
   .seg button.active{background:var(--gold);color:#1a1206;font-weight:600}
   .seg button:focus-visible{outline:2px solid var(--gold-soft);outline-offset:-2px}
-  .refresh{background:var(--card);border:1px solid var(--line-soft);color:var(--text);border-radius:10px;padding:8px 14px;font-family:'Poppins';font-size:12.5px;cursor:pointer}
+  .refresh{background:var(--card);border:1px solid var(--line-soft);color:var(--text);border-radius:10px;padding:8px 14px;font-size:12.5px;cursor:pointer}
   .refresh:hover{border-color:var(--gold)}
   .status{color:var(--muted);font-size:12px;margin:14px 0 22px}
-  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px}
-  .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px}
-  .kpi .num{font-size:34px;font-weight:700;line-height:1}
-  .kpi .lbl{font-size:11.5px;color:var(--muted);margin-top:8px;text-transform:uppercase;letter-spacing:.6px}
-  .kpi.alert{border-color:rgba(232,121,90,.4)}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
-  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
-  .panel.hero{margin-bottom:18px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:18px}
   .panel h2{font-size:15px;font-weight:700;margin-bottom:3px}
   .panel .desc{font-size:12px;color:var(--muted);margin-bottom:18px}
-  /* Funil */
-  .frow{display:grid;grid-template-columns:165px 1fr 96px;align-items:center;gap:12px;margin-bottom:9px}
-  .frow .fname{font-size:12.5px;color:var(--text)}
-  .ftrack{background:var(--line-soft);border-radius:8px;height:26px;display:flex;justify-content:center;overflow:hidden}
-  .ffill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-soft));border-radius:8px;transition:width .6s ease}
-  .fval{font-size:12.5px;text-align:right;color:var(--muted)}
-  .fval b{color:var(--text);font-family:'Montserrat';font-weight:700}
-  /* barras simples */
-  .brow{display:grid;grid-template-columns:150px 1fr 50px;align-items:center;gap:12px;margin-bottom:10px}
-  .brow .bname{font-size:12.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .btrack{background:var(--line-soft);border-radius:6px;height:18px;overflow:hidden}
-  .bfill{height:100%;border-radius:6px;background:linear-gradient(90deg,#2f7fbf,#5aa9e6);transition:width .6s ease}
-  .bfill.red{background:linear-gradient(90deg,#b5503a,var(--red))}
+  .grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;margin-bottom:18px;align-items:start}
+  .grid2 .panel{margin-bottom:0;height:100%}
+  /* barras por etapa */
+  .brow{display:grid;grid-template-columns:160px 1fr 46px;align-items:center;gap:12px;margin-bottom:9px}
+  .bname{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .btrack{background:var(--line-soft);border-radius:6px;height:20px;overflow:hidden}
+  .bfill{height:100%;border-radius:6px;transition:width .6s ease}
   .bval{font-size:12.5px;text-align:right;font-family:'Montserrat';font-weight:600}
-  /* tabela corretores */
-  table{width:100%;border-collapse:collapse;font-size:12.5px}
-  th{text-align:left;color:var(--muted);font-weight:500;padding:0 0 10px;border-bottom:1px solid var(--line-soft);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
-  th.r,td.r{text-align:right}
-  td{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-  td.name{color:var(--text)}
-  td .mono{font-family:'Montserrat';font-weight:600}
-  .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px}
-  .pill.warn{background:rgba(232,121,90,.15);color:var(--red)}
-  .empty{color:var(--muted);font-size:13px;padding:8px 0}
+  /* donut */
+  .donut-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+  .legend{width:100%;display:flex;flex-direction:column;gap:6px}
+  .lg{display:grid;grid-template-columns:12px 1fr auto;align-items:center;gap:8px;font-size:12px}
+  .dot{width:10px;height:10px;border-radius:3px}
+  .lg .c{color:var(--muted)}
+  /* funil de conversão */
+  .crow{display:grid;grid-template-columns:175px 1fr 92px;align-items:center;gap:12px;margin-bottom:11px}
+  .cname{font-size:13px}
+  .ctrack{background:var(--line-soft);border-radius:7px;height:30px;overflow:hidden;display:flex;align-items:center}
+  .cfill{height:100%;border-radius:7px;display:flex;align-items:center;padding-left:10px;color:#0a1c2c;font-family:'Montserrat';font-weight:700;font-size:13px;transition:width .6s ease;min-width:34px}
+  .cval{font-size:12.5px;text-align:right;color:var(--muted)}.cval b{color:var(--text);font-family:'Montserrat'}
+  .note{font-size:11.5px;color:var(--muted);margin-top:6px;font-style:italic}
   .errbox{background:rgba(232,121,90,.12);border:1px solid rgba(232,121,90,.4);color:#ffd9cc;padding:16px;border-radius:12px}
-  .foot{text-align:center;color:var(--muted);font-size:11.5px;margin-top:30px;letter-spacing:.4px}
-  .foot .gold{color:var(--gold)}
-  @media(max-width:860px){
-    .kpis{grid-template-columns:repeat(2,1fr)}
-    .grid2{grid-template-columns:1fr}
-    .frow{grid-template-columns:110px 1fr 70px}
-    .brow{grid-template-columns:110px 1fr 44px}
-  }
-  @media(prefers-reduced-motion:reduce){.ffill,.bfill{transition:none}}
+  .foot{text-align:center;color:var(--muted);font-size:11.5px;margin-top:30px}.foot .gold{color:var(--gold)}
+  @media(max-width:860px){.grid2{grid-template-columns:1fr}.brow{grid-template-columns:120px 1fr 40px}.crow{grid-template-columns:120px 1fr 78px}}
+  @media(prefers-reduced-motion:reduce){.bfill,.cfill{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-
   <div class="topbar">
     <div>
       <h1>Asa Invest</h1>
@@ -101,44 +79,26 @@
 
   <div id="dash" style="display:none">
 
-    <div class="kpis">
-      <div class="kpi"><div class="num" id="k-open">—</div><div class="lbl">Em andamento</div></div>
-      <div class="kpi"><div class="num" id="k-won" style="color:var(--green)">—</div><div class="lbl">Ganhos</div></div>
-      <div class="kpi"><div class="num" id="k-lost" style="color:var(--red)">—</div><div class="lbl">Perdidos</div></div>
-      <div class="kpi"><div class="num" id="k-rate" style="color:var(--gold)">—</div><div class="lbl">Taxa de ganho</div></div>
-      <div class="kpi alert"><div class="num" id="k-stale" style="color:var(--red)">—</div><div class="lbl">Leads parados +30d</div></div>
-    </div>
-
-    <div class="panel hero">
-      <h2>Onde estão os negócios em andamento</h2>
-      <div class="desc">Distribuição dos leads ativos por etapa do funil (snapshot atual)</div>
-      <div id="funnel"></div>
-    </div>
-
+    <!-- REQUISITO 1 -->
     <div class="grid2">
       <div class="panel">
-        <h2>Por corretor</h2>
-        <div class="desc">Carteira de cada responsável</div>
-        <div id="brokers"></div>
+        <h2>Negócios em andamento por etapa</h2>
+        <div class="desc">Distribuição real dos leads ativos · ordem do funil · não afetado pelo filtro de data</div>
+        <div id="stage-bars"></div>
       </div>
       <div class="panel">
-        <h2>Origem dos leads</h2>
-        <div class="desc">De onde o pipeline está vindo</div>
-        <div id="sources"></div>
+        <h2>Distribuição</h2>
+        <div class="desc">Em andamento</div>
+        <div class="donut-wrap"><div id="donut"></div><div class="legend" id="donut-legend"></div></div>
       </div>
     </div>
 
-    <div class="grid2">
-      <div class="panel">
-        <h2>Leads parados</h2>
-        <div class="desc">Em andamento, sem atividade há mais de 30 dias — os mais antigos primeiro</div>
-        <div id="stale"></div>
-      </div>
-      <div class="panel">
-        <h2>Motivos de perda</h2>
-        <div class="desc">Dos negócios perdidos — separa oportunidade perdida de lead desqualificado</div>
-        <div id="losses"></div>
-      </div>
+    <!-- REQUISITO 2 -->
+    <div class="panel">
+      <h2>Funil de conversão</h2>
+      <div class="desc">Quantos leads chegaram (estão ou já passaram) por cada fase · % em relação ao topo</div>
+      <div id="conv"></div>
+      <div class="note">As fases ignoram o filtro de data. Apenas <b>Venda</b> respeita o período selecionado (pela data de fechamento).</div>
     </div>
 
   </div>
@@ -147,121 +107,97 @@
 </div>
 
 <script>
-const STAGE_ORDER = ['1° Contato','2° Contato','3° Contato','4° Contato','5° Contato (Ultimo)','Em Conversa','Atendimento','Possibilidade de Reunião','Reunião Agendada','No-Show','Reunião realizada','Proposta / Negociação'];
-let ALL = [];
-let PERIOD = 0;
+let ALL=[], STAGE_ORDER=[], PERIOD=0;
+const DONUT_COLORS=['#c9a24b','#e3c789','#34c08a','#1f8f6a','#5aa9e6','#2f7fbf','#7c6cd8','#9a8be6','#e8795a','#c4623f','#8ca6bd','#d4b483'];
 
-const fmt = n => (n||0).toLocaleString('pt-BR');
-const daysSince = iso => iso ? Math.floor((Date.now()-new Date(iso))/86400000) : null;
+const fmt=n=>(n||0).toLocaleString('pt-BR');
+const daysSince=iso=>iso?Math.floor((Date.now()-new Date(iso))/86400000):null;
+const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
 
-function groupCount(arr, key){
-  const m={};
-  arr.forEach(d=>{const k=d[key]||'—'; m[k]=(m[k]||0)+1;});
-  return m;
+const SEQ=['1 contato','2 contato','3 contato','4 contato','5 contato','em conversa','atendimento','possibilidade de reuniao','reuniao agendada','no show','reuniao realizada','proposta'];
+function stageRank(name){
+  if(STAGE_ORDER.length){const i=STAGE_ORDER.indexOf(name); if(i>=0) return i;}
+  const n=norm(name);
+  for(let i=0;i<SEQ.length;i++){ if(n.includes(SEQ[i])) return i; }
+  return 99;
 }
 
-function inPeriod(d){
-  if(!PERIOD) return true;
-  if(!d.created_at) return false;
-  return daysSince(d.created_at) <= PERIOD;
-}
+// Macro-etapas do funil de conversão
+const MACROS=[
+  {label:'Pré-atendimento',     color:'#8ca6bd', match:n=>n.includes('contato')},
+  {label:'Em atendimento',      color:'#5aa9e6', match:n=>['em conversa','atendimento','possibilidade de reuniao'].includes(n)},
+  {label:'Reunião agendada',    color:'#2f7fbf', match:n=>['reuniao agendada','no show'].includes(n)},
+  {label:'Reunião realizada',   color:'#c9a24b', match:n=>n==='reuniao realizada'},
+  {label:'Proposta / Negociação',color:'#e3c789',match:n=>n.includes('proposta')||n.includes('negociacao')},
+];
+function macroOf(stage){const n=norm(stage); for(let i=0;i<MACROS.length;i++) if(MACROS[i].match(n)) return i; return -1;}
 
-function bars(map, el, opts={}){
-  const entries = Object.entries(map).sort((a,b)=>b[1]-a[1]);
-  if(!entries.length){ el.innerHTML='<div class="empty">Sem dados no período.</div>'; return; }
-  const max = entries[0][1];
-  el.innerHTML = entries.map(([name,val])=>`
-    <div class="brow">
-      <div class="bname" title="${name}">${name}</div>
-      <div class="btrack"><div class="bfill ${opts.red?'red':''}" style="width:${Math.max(val/max*100,3)}%"></div></div>
-      <div class="bval">${fmt(val)}</div>
-    </div>`).join('');
+function donutSVG(entries,total){
+  const r=70,cx=90,cy=90,C=2*Math.PI*r,sw=26; let off=0,segs='';
+  entries.forEach(([_,val],i)=>{
+    const len=total?(val/total)*C:0;
+    segs+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${DONUT_COLORS[i%DONUT_COLORS.length]}" stroke-width="${sw}" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 ${cx} ${cy})"></circle>`;
+    off+=len;
+  });
+  return `<svg viewBox="0 0 180 180" width="180" height="180">${segs}
+    <text x="${cx}" y="${cy-2}" text-anchor="middle" fill="#eaf1f7" font-size="28" font-family="Montserrat" font-weight="700">${fmt(total)}</text>
+    <text x="${cx}" y="${cy+18}" text-anchor="middle" fill="#8ca6bd" font-size="11">em andamento</text></svg>`;
 }
 
 function render(){
-  const data = ALL.filter(inPeriod);
-  const open = data.filter(d=>d.win===null||d.win===undefined);
-  const won  = data.filter(d=>d.win===true);
-  const lost = data.filter(d=>d.win===false);
-  const rate = (won.length+lost.length) ? Math.round(won.length/(won.length+lost.length)*100) : 0;
+  const open=ALL.filter(d=>d.win===null||d.win===undefined);
 
-  const staleList = open.filter(d=>{ const dd=daysSince(d.last_activity_at||d.created_at); return dd!==null && dd>30; })
-    .sort((a,b)=> daysSince(b.last_activity_at||b.created_at)-daysSince(a.last_activity_at||a.created_at));
+  // --- REQUISITO 1: por etapa (ordem do funil, ignora data) ---
+  const byStage={}; open.forEach(d=>{byStage[d.stage]=(byStage[d.stage]||0)+1;});
+  const stages=Object.keys(byStage).sort((a,b)=>stageRank(a)-stageRank(b));
+  const maxStage=Math.max(...stages.map(s=>byStage[s]),1);
+  document.getElementById('stage-bars').innerHTML=stages.map((s,i)=>`
+    <div class="brow"><div class="bname" title="${s}">${s}</div>
+    <div class="btrack"><div class="bfill" style="width:${Math.max(byStage[s]/maxStage*100,3)}%;background:${DONUT_COLORS[i%DONUT_COLORS.length]}"></div></div>
+    <div class="bval">${fmt(byStage[s])}</div></div>`).join('')||'<div class="desc">Nenhum lead em andamento.</div>';
 
-  document.getElementById('k-open').textContent=fmt(open.length);
-  document.getElementById('k-won').textContent=fmt(won.length);
-  document.getElementById('k-lost').textContent=fmt(lost.length);
-  document.getElementById('k-rate').textContent=rate+'%';
-  document.getElementById('k-stale').textContent=fmt(staleList.length);
+  const entries=stages.map(s=>[s,byStage[s]]);
+  document.getElementById('donut').innerHTML=donutSVG(entries,open.length);
+  document.getElementById('donut-legend').innerHTML=entries.map((e,i)=>{
+    const pct=open.length?Math.round(e[1]/open.length*100):0;
+    return `<div class="lg"><span class="dot" style="background:${DONUT_COLORS[i%DONUT_COLORS.length]}"></span><span title="${e[0]}">${e[0]}</span><span class="c">${fmt(e[1])} · ${pct}%</span></div>`;
+  }).join('');
 
-  // Funil (somente em andamento)
-  const byStage = groupCount(open,'stage');
-  const stages = Object.keys(byStage).sort((a,b)=>{
-    let ia=STAGE_ORDER.indexOf(a), ib=STAGE_ORDER.indexOf(b);
-    if(ia<0)ia=99; if(ib<0)ib=99; return ia-ib;
-  });
-  const maxStage = Math.max(...stages.map(s=>byStage[s]),1);
-  document.getElementById('funnel').innerHTML = stages.map(s=>{
-    const v=byStage[s], pct=open.length?Math.round(v/open.length*100):0;
-    return `<div class="frow">
-      <div class="fname">${s}</div>
-      <div class="ftrack"><div class="ffill" style="width:${Math.max(v/maxStage*100,4)}%"></div></div>
-      <div class="fval"><b>${fmt(v)}</b> · ${pct}%</div>
-    </div>`;
-  }).join('') || '<div class="empty">Sem leads em andamento no período.</div>';
+  // --- REQUISITO 2: funil de conversão (cumulativo) ---
+  const cum=[0,0,0,0,0];
+  ALL.forEach(d=>{const mi=macroOf(d.stage); if(mi>=0) for(let m=0;m<=mi;m++) cum[m]++;});
+  const base=cum[0]||1;
+  const vendas=ALL.filter(d=>d.win===true && (!PERIOD || (d.closed_at && daysSince(d.closed_at)<=PERIOD))).length;
 
-  // Por corretor
-  const bk={};
-  data.forEach(d=>{
-    const u=d.user||'—'; bk[u]=bk[u]||{open:0,won:0,lost:0};
-    if(d.win===true)bk[u].won++; else if(d.win===false)bk[u].lost++; else bk[u].open++;
-  });
-  const rows=Object.entries(bk).sort((a,b)=>(b[1].open+b[1].won+b[1].lost)-(a[1].open+a[1].won+a[1].lost));
-  document.getElementById('brokers').innerHTML = rows.length ? `
-    <table><thead><tr><th>Corretor</th><th class="r">Andamento</th><th class="r">Ganhos</th><th class="r">Perdidos</th></tr></thead>
-    <tbody>${rows.map(([n,v])=>`<tr><td class="name">${n}</td><td class="r"><span class="mono">${fmt(v.open)}</span></td><td class="r" style="color:var(--green)">${fmt(v.won)}</td><td class="r" style="color:var(--red)">${fmt(v.lost)}</td></tr>`).join('')}</tbody></table>`
-    : '<div class="empty">Sem dados no período.</div>';
-
-  // Origem
-  bars(groupCount(data,'source'), document.getElementById('sources'));
-
-  // Motivos de perda
-  const lossMap={}; lost.forEach(d=>{const k=d.lost_reason||'Não informado'; lossMap[k]=(lossMap[k]||0)+1;});
-  bars(lossMap, document.getElementById('losses'), {red:true});
-
-  // Leads parados (lista)
-  const el=document.getElementById('stale');
-  if(!staleList.length){ el.innerHTML='<div class="empty">Nenhum lead parado há mais de 30 dias. 👏</div>'; }
-  else{
-    el.innerHTML=`<table><thead><tr><th>Negócio</th><th>Etapa</th><th class="r">Parado há</th></tr></thead>
-    <tbody>${staleList.slice(0,12).map(d=>{const dd=daysSince(d.last_activity_at||d.created_at);
-      return `<tr><td class="name">${d.name}</td><td style="color:var(--muted)">${d.stage}</td><td class="r"><span class="pill warn">${dd} dias</span></td></tr>`;}).join('')}</tbody></table>
-    ${staleList.length>12?`<div class="empty" style="margin-top:8px">+${staleList.length-12} outros leads parados</div>`:''}`;
-  }
+  const conv=[
+    ...MACROS.map((m,i)=>({label:m.label,color:m.color,val:cum[i]})),
+    {label:'Venda',color:'#34c08a',val:vendas},
+  ];
+  document.getElementById('conv').innerHTML=conv.map(c=>{
+    const pct=Math.round(c.val/base*100);
+    return `<div class="crow"><div class="cname">${c.label}</div>
+      <div class="ctrack"><div class="cfill" style="width:${Math.max(c.val/base*100,4)}%;background:${c.color}">${fmt(c.val)}</div></div>
+      <div class="cval"><b>${pct}%</b></div></div>`;
+  }).join('');
 }
 
 async function loadData(){
   document.getElementById('status').textContent='Atualizando…';
   try{
-    const res=await fetch('/api/deals');
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const data=await res.json();
-    if(data.error) throw new Error(data.error);
-    ALL=data.deals||[];
-    document.getElementById('dash').style.display='block';
-    render();
+    const res=await fetch('/api/deals'); if(!res.ok) throw new Error('HTTP '+res.status);
+    const data=await res.json(); if(data.error) throw new Error(data.error);
+    ALL=data.deals||[]; STAGE_ORDER=data.stage_order||[];
+    document.getElementById('dash').style.display='block'; render();
     document.getElementById('status').textContent=`${fmt(ALL.length)} negócios carregados · atualizado às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
   }catch(e){
-    document.getElementById('status').innerHTML=`<div class="errbox">Não consegui carregar os dados: ${e.message}. Tenta atualizar; se persistir, me chama.</div>`;
+    document.getElementById('status').innerHTML=`<div class="errbox">Não consegui carregar: ${e.message}. Tenta atualizar; se persistir, me chama.</div>`;
   }
 }
-
 document.getElementById('seg').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b)return;
   document.querySelectorAll('#seg button').forEach(x=>x.classList.remove('active'));
   b.classList.add('active'); PERIOD=Number(b.dataset.days); render();
 });
-
 loadData();
 </script>
 </body>
