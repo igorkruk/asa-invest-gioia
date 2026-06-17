@@ -131,6 +131,12 @@
       <div class="seg" id="cool-seg" style="margin-bottom:16px;width:fit-content">
         <button data-cool="7">7 dias</button><button data-cool="30" class="active">30 dias</button><button data-cool="90">90 dias</button></div>
       <div id="cool"></div></div>
+    <!-- REQ 4 tarefas -->
+    <div class="panel"><h2>Tarefas</h2><div class="desc">Em andamento ignora o filtro de data · concluídas respeitam o período</div>
+      <div class="lossgrid">
+        <div class="lossbox"><h3 style="color:var(--gold)">Em andamento <span id="task-pend-total" style="font-family:Montserrat"></span></h3><div id="task-pend"></div></div>
+        <div class="lossbox"><h3 style="color:var(--green)">Concluídas no período <span id="task-done-total" style="font-family:Montserrat"></span></h3><div id="task-done"></div></div>
+      </div></div>
     <!-- REQ 3 -->
     <div class="panel"><h2>Efetividade — Canal › Campanha › Conjunto › Anúncio</h2>
       <div class="desc">Clique pra abrir o nível de baixo. Multi-seleção. (Não afetado pelo filtro de data)</div>
@@ -145,7 +151,8 @@
 </div>
 
 <script>
-let ALL=[],STAGE_ORDER=[],SEL_USERS=[],COOL=30,HIER={},selCanais=[],selCamps=[],selConjs=[];
+let ALL=[],TASKS=[],STAGE_ORDER=[],SEL_USERS=[],COOL=30,HIER={},selCanais=[],selCamps=[],selConjs=[];
+const TYPE_LABEL={call:'Ligação',whatsapp:'WhatsApp',task:'Tarefa',email:'E-mail',visit:'Visita',meeting:'Reunião'};
 let P={mode:'preset',days:0,from:null,to:null};
 const DCOL=['#c9a24b','#e3c789','#34c08a','#1f8f6a','#5aa9e6','#2f7fbf','#7c6cd8','#9a8be6','#e8795a','#c4623f','#8ca6bd','#d4b483'];
 const DESQ=['Bloqueou no whatsapp','Cadastro Duplicado','Cliente de Aluguel','Corretor Sondando','Crédito Reprovado','Não tem interesse','Nunca respondeu','Renda Insuficiente','Curioso','Dados Incorretos'];
@@ -224,6 +231,17 @@ function render(){
   const stale=open.filter(d=>{const dd=daysSince(d.last_activity_at||d.created_at);return dd!==null&&dd>COOL;}).sort((a,b)=>daysSince(b.last_activity_at||b.created_at)-daysSince(a.last_activity_at||a.created_at));
   document.getElementById('cool').innerHTML=stale.length?`<div class="desc" style="margin-bottom:10px"><b style="color:var(--red)">${stale.length}</b> leads sem contato há mais de ${COOL} dias</div><table><thead><tr><th>Lead</th><th>Etapa</th><th>Corretor</th><th>Parado há</th></tr></thead><tbody>${stale.slice(0,15).map(d=>{const dd=daysSince(d.last_activity_at||d.created_at);return `<tr><td class="name">${d.name}</td><td style="color:var(--muted)">${d.stage}</td><td>${d.user}</td><td><span class="pill warn">${dd} dias</span></td></tr>`;}).join('')}</tbody></table>${stale.length>15?`<div class="ph">+${stale.length-15} outros</div>`:''}`:'<div class="ph">Nenhum lead esfriando nesse corte. 👏</div>';
 
+  // Req4 tarefas
+  const T=SEL_USERS.length?TASKS.filter(t=>SEL_USERS.includes(t.user)):TASKS;
+  const pend=T.filter(t=>!t.done);
+  const doneT=T.filter(t=>t.done&&inWindow(t.done_date));
+  const byType=list=>{const m={};list.forEach(t=>{const k=TYPE_LABEL[t.type]||t.type;m[k]=(m[k]||0)+1;});return Object.entries(m).sort((a,b)=>b[1]-a[1]);};
+  const typeRows=e=>e.length?e.map(([k,n])=>`<div class="lrow"><span>${k}</span><span style="font-family:Montserrat;font-weight:600">${n}</span></div>`).join(''):'<div class="ph">Nenhuma.</div>';
+  document.getElementById('task-pend-total').textContent='· '+fmt(pend.length);
+  document.getElementById('task-done-total').textContent='· '+fmt(doneT.length);
+  document.getElementById('task-pend').innerHTML=typeRows(byType(pend));
+  document.getElementById('task-done').innerHTML=typeRows(byType(doneT));
+
   // Req3
   HIER=buildHierarchy(D);renderCanais();
 }
@@ -248,7 +266,7 @@ document.getElementById('seg').addEventListener('click',e=>{const b=e.target.clo
 document.getElementById('dt-apply').addEventListener('click',()=>{const f=document.getElementById('dt-from').value,t=document.getElementById('dt-to').value;if(!f||!t){alert('Escolha as duas datas.');return;}P={mode:'custom',days:0,from:f,to:t};render();});
 document.getElementById('cool-seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#cool-seg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');COOL=Number(b.dataset.cool);render();});
 
-async function loadData(){document.getElementById('status').textContent='Atualizando…';try{const res=await fetch('/api/deals');if(!res.ok)throw new Error('HTTP '+res.status);const data=await res.json();if(data.error)throw new Error(data.error);ALL=data.deals||[];STAGE_ORDER=data.stage_order||[];buildUserMenu();document.getElementById('dash').style.display='block';render();document.getElementById('status').textContent=`${fmt(ALL.length)} negócios · atualizado às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;}catch(e){document.getElementById('status').innerHTML=`<div class="errbox">Não consegui carregar: ${e.message}. Tenta atualizar; se persistir, me chama.</div>`;}}
+async function loadData(){document.getElementById('status').textContent='Atualizando…';try{const res=await fetch('/api/deals');if(!res.ok)throw new Error('HTTP '+res.status);const data=await res.json();if(data.error)throw new Error(data.error);ALL=data.deals||[];TASKS=data.tasks||[];STAGE_ORDER=data.stage_order||[];buildUserMenu();document.getElementById('dash').style.display='block';render();document.getElementById('status').textContent=`${fmt(ALL.length)} negócios · atualizado às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;}catch(e){document.getElementById('status').innerHTML=`<div class="errbox">Não consegui carregar: ${e.message}. Tenta atualizar; se persistir, me chama.</div>`;}}
 loadData();
 </script>
 </body>
