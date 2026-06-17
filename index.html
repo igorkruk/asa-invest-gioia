@@ -161,7 +161,7 @@
       </div></div>
     <!-- REQ 3 -->
     <div class="panel"><h2>Efetividade — Canal › Campanha › Conjunto › Anúncio</h2>
-      <div class="desc">Clique pra abrir o nível de baixo. Multi-seleção. (Não afetado pelo filtro de data)</div>
+      <div class="desc">Clique pra abrir o nível de baixo. Multi-seleção. (Filtrado pela data de captação — criação do lead)</div>
       <div class="eff-legend"><span><i class="sq" style="background:#8ca6bd"></i>Total</span><span><i class="sq" style="background:var(--green)"></i>Qualificados</span><span><i class="sq" style="background:var(--red)"></i>Desqualificados</span></div>
       <div class="lvl-title">Canais</div><div class="groups" id="lvl-canais"></div>
       <div class="arrow">▼</div><div class="lvl-title">Campanhas <span class="ctx" id="ctx-camp"></span></div><div class="groups" id="lvl-camps"></div>
@@ -267,8 +267,8 @@ function render(){
   document.getElementById('task-late').innerHTML=typeRows(byType(late));
   document.getElementById('task-done').innerHTML=typeRows(byType(doneT));
 
-  // Req3
-  HIER=buildHierarchy(D);renderCanais();
+  // Req3 — filtrado pela data de captação (criação do lead)
+  HIER=buildHierarchy(D.filter(d=>inWindow(d.created_at)));renderCanais();
 }
 
 function clearLower(level){if(level<=1){selCamps=[];document.getElementById('lvl-camps').innerHTML='<div class="ph">Selecione um canal acima.</div>';document.getElementById('ctx-camp').textContent='';}if(level<=2){selConjs=[];document.getElementById('lvl-conjs').innerHTML='<div class="ph">Selecione uma campanha acima.</div>';document.getElementById('ctx-conj').textContent='';}document.getElementById('lvl-ads').innerHTML='<div class="ph">Selecione acima.</div>';document.getElementById('ctx-ad').textContent='';}
