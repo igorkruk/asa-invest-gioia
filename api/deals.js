@@ -2,20 +2,28 @@ export const config = { runtime: 'nodejs' };
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-
   const TOKEN = process.env.RD_TOKEN;
   const PIPELINE_ID = process.env.RD_PIPELINE_ID;
   const BASE = 'https://crm.rdstation.com/api/v1';
 
   try {
-    let page = 1;
-    let hasMore = true;
-    const all = [];
+    // 1) Ordem real das etapas do funil (direto da definição no RD)
+    let stageOrder = [];
+    try {
+      const pr = await fetch(`${BASE}/deal_pipelines?token=${TOKEN}`);
+      const pdata = await pr.json();
+      const arr = Array.isArray(pdata) ? pdata : (pdata.deal_pipelines || pdata.deals_pipelines || []);
+      const pipe = arr.find(p => p._id === PIPELINE_ID || p.id === PIPELINE_ID);
+      const stagesRaw = pipe && (pipe.deal_stages || pipe.deals_stages);
+      if (Array.isArray(stagesRaw)) {
+        stageOrder = stagesRaw.slice().sort((a,b)=>(a.order||0)-(b.order||0)).map(s=>s.name);
+      }
+    } catch (_) {}
 
-    // Puxa todas as páginas (trava de segurança em 30 páginas)
+    // 2) Todos os negócios (paginado)
+    let page = 1, hasMore = true; const all = [];
     while (hasMore && page <= 30) {
-      const url = `${BASE}/deals?token=${TOKEN}&deal_pipeline_id=${PIPELINE_ID}&limit=200&page=${page}`;
-      const r = await fetch(url);
+      const r = await fetch(`${BASE}/deals?token=${TOKEN}&deal_pipeline_id=${PIPELINE_ID}&limit=200&page=${page}`);
       const data = await r.json();
       const deals = data.deals || [];
       all.push(...deals);
@@ -23,7 +31,6 @@ export default async function handler(req, res) {
       page++;
     }
 
-    // Mantém só os campos que vamos usar nos gráficos
     const trimmed = all.map(d => ({
       id: d._id,
       name: d.name,
@@ -31,28 +38,17 @@ export default async function handler(req, res) {
       stage: d.deal_stage?.name || 'Sem etapa',
       user: d.user?.name || '—',
       source: d.deal_source?.name || 'Sem origem',
-      win: d.win,                                  // true / false / null
+      win: d.win,                              // true=venda, false=perda, null=em andamento
       lost_reason: d.deal_lost_reason?.name || null,
       created_at: d.created_at || null,
+      closed_at: d.closed_at || null,          // data de finalização
       last_activity_at: d.last_activity_at || null,
     }));
 
-    // Agregados de compatibilidade (pro dashboard atual continuar funcionando)
-    const won  = trimmed.filter(d => d.win === true).length;
-    const lost = trimmed.filter(d => d.win === false).length;
-    const open = trimmed.filter(d => d.win === null || d.win === undefined).length;
-
     res.status(200).json({
       total: trimmed.length,
+      stage_order: stageOrder,
       deals: trimmed,
-      open_total: open,
-      won_total: won,
-      lost_total: lost,
-      grand_total: trimmed.length,
-      open_sample: trimmed
-        .filter(d => d.win === null || d.win === undefined)
-        .slice(0, 15)
-        .map(d => ({ name: d.name, stage: d.stage, user: d.user })),
       updated_at: new Date().toISOString(),
     });
   } catch (e) {
