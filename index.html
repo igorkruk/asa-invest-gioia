@@ -1,71 +1,78 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Asa Invest · Funil de Vendas</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{--navy-900:#0a1c2c;--navy-800:#10293c;--card:#163049;--card-2:#1b3a56;
-    --line:rgba(201,162,75,.16);--line-soft:rgba(255,255,255,.07);
-    --gold:#c9a24b;--gold-soft:#e3c789;--text:#eaf1f7;--muted:#8ca6bd;--green:#34c08a;--red:#e8795a;}
+  :root{--navy-900:#0a1c2c;--navy-800:#10293c;--card:#163049;--card-2:#1b3a56;--line:rgba(201,162,75,.16);--line-soft:rgba(255,255,255,.07);--gold:#c9a24b;--gold-soft:#e3c789;--text:#eaf1f7;--muted:#8ca6bd;--green:#34c08a;--red:#e8795a;}
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Poppins',sans-serif;color:var(--text);min-height:100vh;padding:28px 20px 60px;
-    background:radial-gradient(1200px 700px at 50% -10%,#1d3a55 0%,var(--navy-800) 45%,var(--navy-900) 100%);}
+  body{font-family:'Poppins',sans-serif;color:var(--text);min-height:100vh;padding:28px 20px 60px;background:radial-gradient(1200px 700px at 50% -10%,#1d3a55 0%,var(--navy-800) 45%,var(--navy-900) 100%);}
   .wrap{max-width:1180px;margin:0 auto}
   h1,h2,.num{font-family:'Montserrat',sans-serif}
-  .topbar{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px}
+  .topbar{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px}
   h1{font-size:26px;font-weight:800;letter-spacing:.3px}
   .sub{color:var(--muted);font-size:13px;margin-top:3px}.sub .gold{color:var(--gold)}
-  .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
   .seg{display:flex;background:var(--card);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}
-  .seg button{background:none;border:none;color:var(--muted);font-family:'Poppins';font-size:12.5px;padding:8px 14px;cursor:pointer}
+  .seg button{background:none;border:none;color:var(--muted);font-family:'Poppins';font-size:12.5px;padding:8px 13px;cursor:pointer}
   .seg button.active{background:var(--gold);color:#1a1206;font-weight:600}
   .seg button:focus-visible{outline:2px solid var(--gold-soft);outline-offset:-2px}
-  .refresh{background:var(--card);border:1px solid var(--line-soft);color:var(--text);border-radius:10px;padding:8px 14px;font-size:12.5px;cursor:pointer}
-  .refresh:hover{border-color:var(--gold)}
+  .btn{background:var(--card);border:1px solid var(--line-soft);color:var(--text);border-radius:10px;padding:8px 13px;font-family:'Poppins';font-size:12.5px;cursor:pointer}
+  .btn:hover{border-color:var(--gold)}
+  .dd{position:relative}
+  .dd-panel{position:absolute;right:0;top:42px;background:var(--card-2);border:1px solid var(--line);border-radius:12px;padding:10px;min-width:200px;z-index:20;display:none;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+  .dd-panel.open{display:block}
+  .dd-panel label{display:flex;align-items:center;gap:8px;padding:6px 6px;font-size:13px;border-radius:7px;cursor:pointer}
+  .dd-panel label:hover{background:rgba(255,255,255,.04)}
+  .custom-range{display:none;align-items:center;gap:8px;margin-top:10px;justify-content:flex-end;flex-wrap:wrap}
+  .custom-range.open{display:flex}
+  .custom-range input{background:var(--card);border:1px solid var(--line-soft);color:var(--text);border-radius:8px;padding:7px 10px;font-family:'Poppins';font-size:12.5px;color-scheme:dark}
   .status{color:var(--muted);font-size:12px;margin:14px 0 22px}
   .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:18px}
-  .panel h2{font-size:15px;font-weight:700;margin-bottom:3px}
-  .panel .desc{font-size:12px;color:var(--muted);margin-bottom:18px}
-  .grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;margin-bottom:18px;align-items:start}
-  .grid2 .panel{margin-bottom:0;height:100%}
+  .panel h2{font-size:15px;font-weight:700;margin-bottom:3px}.panel .desc{font-size:12px;color:var(--muted);margin-bottom:18px}
+  .grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;margin-bottom:18px;align-items:start}.grid2 .panel{margin-bottom:0;height:100%}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px}
+  .kpi.hero{border-color:rgba(201,162,75,.45);background:linear-gradient(180deg,rgba(201,162,75,.08),var(--card))}
+  .kpi .num{font-size:32px;font-weight:700;line-height:1}.kpi .lbl{font-size:11.5px;color:var(--muted);margin-top:8px;text-transform:uppercase;letter-spacing:.6px}
   .brow{display:grid;grid-template-columns:160px 1fr 46px;align-items:center;gap:12px;margin-bottom:9px}
   .bname{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .btrack{background:var(--line-soft);border-radius:6px;height:20px;overflow:hidden}
-  .bfill{height:100%;border-radius:6px;transition:width .6s ease}
+  .btrack{background:var(--line-soft);border-radius:6px;height:20px;overflow:hidden}.bfill{height:100%;border-radius:6px;transition:width .6s ease}
   .bval{font-size:12.5px;text-align:right;font-family:'Montserrat';font-weight:600}
   .donut-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
-  .legend{width:100%;display:flex;flex-direction:column;gap:6px}
-  .lg{display:grid;grid-template-columns:12px 1fr auto;align-items:center;gap:8px;font-size:12px}
+  .legend{width:100%;display:flex;flex-direction:column;gap:6px}.lg{display:grid;grid-template-columns:12px 1fr auto;align-items:center;gap:8px;font-size:12px}
   .dot{width:10px;height:10px;border-radius:3px}.lg .c{color:var(--muted)}
-  .crow{display:grid;grid-template-columns:175px 1fr 92px;align-items:center;gap:12px;margin-bottom:11px}
-  .cname{font-size:13px}
+  .crow{display:grid;grid-template-columns:175px 1fr 92px;align-items:center;gap:12px;margin-bottom:11px}.cname{font-size:13px}
   .ctrack{background:var(--line-soft);border-radius:7px;height:30px;overflow:hidden;display:flex;align-items:center}
   .cfill{height:100%;border-radius:7px;display:flex;align-items:center;padding-left:10px;color:#0a1c2c;font-family:'Montserrat';font-weight:700;font-size:13px;transition:width .6s ease;min-width:34px}
   .cval{font-size:12.5px;text-align:right;color:var(--muted)}.cval b{color:var(--text);font-family:'Montserrat'}
   .note{font-size:11.5px;color:var(--muted);margin-top:6px;font-style:italic}
-  /* Req 3 cascata */
-  .eff-legend{display:flex;gap:18px;margin-bottom:18px;font-size:12px;color:var(--muted)}
-  .eff-legend span{display:inline-flex;align-items:center;gap:6px}
+  .eff-legend{display:flex;gap:18px;margin-bottom:18px;font-size:12px;color:var(--muted)}.eff-legend span{display:inline-flex;align-items:center;gap:6px}
   .sq{width:11px;height:11px;border-radius:3px;display:inline-block}
   .lvl-title{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--gold);margin:4px 0 12px;border-top:1px solid var(--line-soft);padding-top:14px}
   .lvl-title .ctx{color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
   .arrow{text-align:center;color:var(--muted);font-size:16px;margin:2px 0 4px;opacity:.6}
   .groups{display:flex;gap:14px;flex-wrap:wrap}
   .bg{cursor:pointer;width:96px;border-radius:10px;padding:10px 6px 8px;border:1px solid transparent;transition:.15s;text-align:center}
-  .bg:hover{background:rgba(255,255,255,.03)}
-  .bg.sel{border-color:var(--gold);background:rgba(201,162,75,.10)}
+  .bg:hover{background:rgba(255,255,255,.03)}.bg.sel{border-color:var(--gold);background:rgba(201,162,75,.10)}
   .bg .bars{display:flex;align-items:flex-end;justify-content:center;gap:4px;height:114px}
   .bg .bar{width:16px;border-radius:3px 3px 0 0;transition:height .5s ease}
   .bg-name{font-size:11px;margin-top:8px;line-height:1.25;height:28px;overflow:hidden;color:var(--text)}
   .bg-rate{font-family:'Montserrat';font-weight:700;font-size:14px;margin-top:2px}
   .ph{color:var(--muted);font-size:12.5px;padding:10px 0}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{text-align:left;color:var(--muted);font-weight:500;padding:0 8px 10px 0;border-bottom:1px solid var(--line-soft);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:9px 8px 9px 0;border-bottom:1px solid rgba(255,255,255,.04)}td.name{color:var(--text)}
+  .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px}.pill.warn{background:rgba(232,121,90,.15);color:var(--red)}
+  .lossgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .lossbox h3{font-size:13px;font-weight:600;margin-bottom:10px}
+  .lossbox .head{font-size:12px;color:var(--muted);margin-bottom:12px}
+  .lrow{display:flex;justify-content:space-between;font-size:12.5px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
   .errbox{background:rgba(232,121,90,.12);border:1px solid rgba(232,121,90,.4);color:#ffd9cc;padding:16px;border-radius:12px}
   .foot{text-align:center;color:var(--muted);font-size:11.5px;margin-top:30px}.foot .gold{color:var(--gold)}
-  @media(max-width:860px){.grid2{grid-template-columns:1fr}.brow{grid-template-columns:120px 1fr 40px}.crow{grid-template-columns:120px 1fr 78px}}
+  @media(max-width:860px){.grid2,.kpis,.lossgrid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.brow{grid-template-columns:120px 1fr 40px}.crow{grid-template-columns:120px 1fr 78px}}
   @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -73,187 +80,175 @@
 <div class="wrap">
   <div class="topbar">
     <div><h1>Asa Invest</h1><div class="sub">Funil de Vendas · RD CRM · <span class="gold">engine Gioia</span></div></div>
-    <div class="controls">
-      <div class="seg" id="seg"><button data-days="0" class="active">Todos</button><button data-days="30">30 dias</button><button data-days="90">90 dias</button></div>
-      <button class="refresh" onclick="loadData()">↻ Atualizar</button>
+    <div>
+      <div class="controls">
+        <div class="dd"><button class="btn" id="usr-btn">Corretores: Todos ▾</button>
+          <div class="dd-panel" id="usr-panel"></div></div>
+        <div class="seg" id="seg">
+          <button data-days="0" class="active">Todos</button>
+          <button data-days="7">7d</button>
+          <button data-days="30">30d</button>
+          <button data-days="90">90d</button>
+          <button data-mode="custom">Personalizado</button>
+        </div>
+        <button class="btn" onclick="loadData()">↻</button>
+      </div>
+      <div class="custom-range" id="range">
+        <input type="date" id="dt-from"><span style="color:var(--muted)">até</span><input type="date" id="dt-to">
+        <button class="btn" id="dt-apply">Aplicar</button>
+      </div>
     </div>
   </div>
   <div class="status" id="status">Carregando dados do CRM…</div>
 
   <div id="dash" style="display:none">
+    <!-- KPIs / Taxa geral (Req 10) -->
+    <div class="kpis">
+      <div class="kpi hero"><div class="num" id="k-taxa" style="color:var(--gold)">—</div><div class="lbl">Taxa de qualificação geral</div></div>
+      <div class="kpi"><div class="num" id="k-open">—</div><div class="lbl">Em andamento</div></div>
+      <div class="kpi"><div class="num" id="k-vendas" style="color:var(--green)">—</div><div class="lbl">Vendas no período</div></div>
+      <div class="kpi"><div class="num" id="k-descartes" style="color:var(--red)">—</div><div class="lbl">Descartes no período</div></div>
+    </div>
+
     <!-- REQ 1 -->
     <div class="grid2">
-      <div class="panel"><h2>Negócios em andamento por etapa</h2>
-        <div class="desc">Distribuição real dos leads ativos · ordem do funil · não afetado pelo filtro de data</div>
-        <div id="stage-bars"></div></div>
-      <div class="panel"><h2>Distribuição</h2><div class="desc">Em andamento</div>
-        <div class="donut-wrap"><div id="donut"></div><div class="legend" id="donut-legend"></div></div></div>
+      <div class="panel"><h2>Negócios em andamento por etapa</h2><div class="desc">Ordem do funil · não afetado pelo filtro de data</div><div id="stage-bars"></div></div>
+      <div class="panel"><h2>Distribuição</h2><div class="desc">Em andamento</div><div class="donut-wrap"><div id="donut"></div><div class="legend" id="donut-legend"></div></div></div>
     </div>
     <!-- REQ 2 -->
-    <div class="panel"><h2>Funil de conversão</h2>
-      <div class="desc">Quantos leads chegaram (estão ou já passaram) por cada fase · % em relação ao topo</div>
-      <div id="conv"></div>
-      <div class="note">As fases somam: em andamento (histórico) + perdidos e vendidos que fecharam no período. Só o período afeta os fechados.</div>
-    </div>
+    <div class="panel"><h2>Funil de conversão</h2><div class="desc">Estão ou já passaram por cada fase · % em relação ao topo</div><div id="conv"></div>
+      <div class="note">Em andamento entra sempre; perdidos e vendidos contam só se fecharam no período.</div></div>
+    <!-- REQ 5 vendas -->
+    <div class="panel"><h2>Vendas realizadas</h2><div class="desc" id="sales-sum">—</div><div id="sales"></div></div>
+    <!-- REQ 8 motivos -->
+    <div class="panel"><h2>Motivos de perda</h2><div class="desc" id="loss-head">No período selecionado</div>
+      <div class="lossgrid">
+        <div class="lossbox"><h3 style="color:var(--gold)">Oportunidade perdida</h3><div id="loss-oport"></div></div>
+        <div class="lossbox"><h3 style="color:var(--red)">Desqualificado</h3><div id="loss-desq"></div></div>
+      </div></div>
+    <!-- REQ 9 esfriando -->
+    <div class="panel"><h2>Leads esfriando</h2><div class="desc">Em andamento, sem contato há mais de:</div>
+      <div class="seg" id="cool-seg" style="margin-bottom:16px;width:fit-content">
+        <button data-cool="7">7 dias</button><button data-cool="30" class="active">30 dias</button><button data-cool="90">90 dias</button></div>
+      <div id="cool"></div></div>
     <!-- REQ 3 -->
     <div class="panel"><h2>Efetividade — Canal › Campanha › Conjunto › Anúncio</h2>
-      <div class="desc">Clique pra abrir o nível de baixo. Pode selecionar mais de um. (Não afetado pelo filtro de data)</div>
-      <div class="eff-legend">
-        <span><i class="sq" style="background:#8ca6bd"></i>Total</span>
-        <span><i class="sq" style="background:var(--green)"></i>Qualificados</span>
-        <span><i class="sq" style="background:var(--red)"></i>Desqualificados</span>
-      </div>
+      <div class="desc">Clique pra abrir o nível de baixo. Multi-seleção. (Não afetado pelo filtro de data)</div>
+      <div class="eff-legend"><span><i class="sq" style="background:#8ca6bd"></i>Total</span><span><i class="sq" style="background:var(--green)"></i>Qualificados</span><span><i class="sq" style="background:var(--red)"></i>Desqualificados</span></div>
       <div class="lvl-title">Canais</div><div class="groups" id="lvl-canais"></div>
-      <div class="arrow">▼</div>
-      <div class="lvl-title">Campanhas <span class="ctx" id="ctx-camp"></span></div><div class="groups" id="lvl-camps"></div>
-      <div id="conj-wrap"><div class="arrow">▼</div>
-        <div class="lvl-title">Conjuntos <span class="ctx" id="ctx-conj"></span></div><div class="groups" id="lvl-conjs"></div></div>
-      <div class="arrow">▼</div>
-      <div class="lvl-title">Anúncios <span class="ctx" id="ctx-ad"></span></div><div class="groups" id="lvl-ads"></div>
+      <div class="arrow">▼</div><div class="lvl-title">Campanhas <span class="ctx" id="ctx-camp"></span></div><div class="groups" id="lvl-camps"></div>
+      <div id="conj-wrap"><div class="arrow">▼</div><div class="lvl-title">Conjuntos <span class="ctx" id="ctx-conj"></span></div><div class="groups" id="lvl-conjs"></div></div>
+      <div class="arrow">▼</div><div class="lvl-title">Anúncios <span class="ctx" id="ctx-ad"></span></div><div class="groups" id="lvl-ads"></div>
     </div>
   </div>
-
   <div class="foot">Atualizado em tempo real via API do RD CRM · <span class="gold">Gioia Performance</span></div>
 </div>
 
 <script>
-let ALL=[],STAGE_ORDER=[],PERIOD=0,HIER={};
-let selCanais=[],selCamps=[],selConjs=[];
-const DONUT_COLORS=['#c9a24b','#e3c789','#34c08a','#1f8f6a','#5aa9e6','#2f7fbf','#7c6cd8','#9a8be6','#e8795a','#c4623f','#8ca6bd','#d4b483'];
+let ALL=[],STAGE_ORDER=[],SEL_USERS=[],COOL=30,HIER={},selCanais=[],selCamps=[],selConjs=[];
+let P={mode:'preset',days:0,from:null,to:null};
+const DCOL=['#c9a24b','#e3c789','#34c08a','#1f8f6a','#5aa9e6','#2f7fbf','#7c6cd8','#9a8be6','#e8795a','#c4623f','#8ca6bd','#d4b483'];
 const DESQ=['Bloqueou no whatsapp','Cadastro Duplicado','Cliente de Aluguel','Corretor Sondando','Crédito Reprovado','Não tem interesse','Nunca respondeu','Renda Insuficiente','Curioso','Dados Incorretos'];
 
 const fmt=n=>(n||0).toLocaleString('pt-BR');
 const daysSince=iso=>iso?Math.floor((Date.now()-new Date(iso))/86400000):null;
 const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
 const DESQ_N=DESQ.map(norm);
-const classify=d=>(d.win===false&&DESQ_N.includes(norm(d.lost_reason)))?'disq':'qual';
+const isDesq=d=>d.win===false&&DESQ_N.includes(norm(d.lost_reason));
+const classify=d=>isDesq(d)?'disq':'qual';
 const rate=n=>n.total?Math.round(n.qual/n.total*100):0;
+const fmtDate=iso=>iso?new Date(iso).toLocaleDateString('pt-BR'):'—';
+
+function inWindow(iso){if(!iso)return false;if(P.mode==='custom'){if(!P.from||!P.to)return true;const t=new Date(iso);return t>=new Date(P.from)&&t<=new Date(P.to+'T23:59:59');}if(!P.days)return true;return daysSince(iso)<=P.days;}
+function scoped(){return SEL_USERS.length?ALL.filter(d=>SEL_USERS.includes(d.user)):ALL;}
 
 const SEQ=['1 contato','2 contato','3 contato','4 contato','5 contato','em conversa','atendimento','possibilidade de reuniao','reuniao agendada','no show','reuniao realizada','proposta'];
 function stageRank(name){if(STAGE_ORDER.length){const i=STAGE_ORDER.indexOf(name);if(i>=0)return i;}const n=norm(name);for(let i=0;i<SEQ.length;i++)if(n.includes(SEQ[i]))return i;return 99;}
-const MACROS=[
- {label:'Pré-atendimento',color:'#8ca6bd',match:n=>n.includes('contato')},
- {label:'Em atendimento',color:'#5aa9e6',match:n=>['em conversa','atendimento','possibilidade de reuniao'].includes(n)},
- {label:'Reunião agendada',color:'#2f7fbf',match:n=>['reuniao agendada','no show'].includes(n)},
- {label:'Reunião realizada',color:'#c9a24b',match:n=>n==='reuniao realizada'},
- {label:'Proposta / Negociação',color:'#e3c789',match:n=>n.includes('proposta')||n.includes('negociacao')},
-];
+const MACROS=[{label:'Pré-atendimento',color:'#8ca6bd',match:n=>n.includes('contato')},{label:'Em atendimento',color:'#5aa9e6',match:n=>['em conversa','atendimento','possibilidade de reuniao'].includes(n)},{label:'Reunião agendada',color:'#2f7fbf',match:n=>['reuniao agendada','no show'].includes(n)},{label:'Reunião realizada',color:'#c9a24b',match:n=>n==='reuniao realizada'},{label:'Proposta / Negociação',color:'#e3c789',match:n=>n.includes('proposta')||n.includes('negociacao')}];
 const macroOf=stage=>{const n=norm(stage);for(let i=0;i<MACROS.length;i++)if(MACROS[i].match(n))return i;return -1;};
 
 function blank(){return{total:0,qual:0,disq:0};}
-function bump(node,k){node.total++;node[k]++;}
-function buildHierarchy(deals){const C={};deals.forEach(d=>{const k=classify(d);
-  const ca=d.source||'(sem origem)',cm=d.campaign||'(sem campanha)',cj=d.adset||'(sem conjunto)',ad=d.ad||'(sem anúncio)';
-  C[ca]=C[ca]||Object.assign(blank(),{camps:{}});bump(C[ca],k);
-  const M=C[ca].camps;M[cm]=M[cm]||Object.assign(blank(),{conjs:{}});bump(M[cm],k);
-  const J=M[cm].conjs;J[cj]=J[cj]||Object.assign(blank(),{ads:{}});bump(J[cj],k);
-  const A=J[cj].ads;A[ad]=A[ad]||blank();bump(A[ad],k);});return C;}
+function bump(n,k){n.total++;n[k]++;}
+function buildHierarchy(deals){const C={};deals.forEach(d=>{const k=classify(d);const ca=d.source||'(sem origem)',cm=d.campaign||'(sem campanha)',cj=d.adset||'(sem conjunto)',ad=d.ad||'(sem anúncio)';C[ca]=C[ca]||Object.assign(blank(),{camps:{}});bump(C[ca],k);const M=C[ca].camps;M[cm]=M[cm]||Object.assign(blank(),{conjs:{}});bump(M[cm],k);const J=M[cm].conjs;J[cj]=J[cj]||Object.assign(blank(),{ads:{}});bump(J[cj],k);const A=J[cj].ads;A[ad]=A[ad]||blank();bump(A[ad],k);});return C;}
 function nodeByPath(id){const p=id.split('||');let n=HIER[p[0]];if(p[1])n=n.camps[p[1]];if(p[2])n=n.conjs[p[2]];return n;}
 function adsOf(node){if(node.ads)return node.ads;const out={};if(node.conjs)Object.values(node.conjs).forEach(cn=>Object.entries(cn.ads||{}).forEach(([a,an])=>{out[a]=out[a]||blank();out[a].total+=an.total;out[a].qual+=an.qual;out[a].disq+=an.disq;}));return out;}
 
-function donutSVG(entries,total){const r=70,cx=90,cy=90,C=2*Math.PI*r,sw=26;let off=0,segs='';
-  entries.forEach(([_,v],i)=>{const len=total?(v/total)*C:0;segs+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${DONUT_COLORS[i%DONUT_COLORS.length]}" stroke-width="${sw}" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 ${cx} ${cy})"></circle>`;off+=len;});
-  return `<svg viewBox="0 0 180 180" width="180" height="180">${segs}<text x="${cx}" y="${cy-2}" text-anchor="middle" fill="#eaf1f7" font-size="28" font-family="Montserrat" font-weight="700">${fmt(total)}</text><text x="${cx}" y="${cy+18}" text-anchor="middle" fill="#8ca6bd" font-size="11">em andamento</text></svg>`;}
+function donutSVG(entries,total){const r=70,cx=90,cy=90,C=2*Math.PI*r,sw=26;let off=0,segs='';entries.forEach(([_,v],i)=>{const len=total?(v/total)*C:0;segs+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${DCOL[i%DCOL.length]}" stroke-width="${sw}" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 ${cx} ${cy})"></circle>`;off+=len;});return `<svg viewBox="0 0 180 180" width="180" height="180">${segs}<text x="${cx}" y="${cy-2}" text-anchor="middle" fill="#eaf1f7" font-size="28" font-family="Montserrat" font-weight="700">${fmt(total)}</text><text x="${cx}" y="${cy+18}" text-anchor="middle" fill="#8ca6bd" font-size="11">em andamento</text></svg>`;}
 
-function barGroup(item,maxTotal,selected){
-  const h=v=>Math.max(maxTotal?v/maxTotal*110:0,2);const r=rate(item.node);
-  const rc=r>50?'var(--green)':r>=25?'var(--gold)':'var(--red)';
-  return `<div class="bg ${selected?'sel':''}" data-id="${encodeURIComponent(item.id)}">
-    <div class="bars">
-      <div class="bar" style="height:${h(item.node.total)}px;background:#8ca6bd" title="Total: ${item.node.total}"></div>
-      <div class="bar" style="height:${h(item.node.qual)}px;background:var(--green)" title="Qualificados: ${item.node.qual}"></div>
-      <div class="bar" style="height:${h(item.node.disq)}px;background:var(--red)" title="Desqualificados: ${item.node.disq}"></div>
-    </div>
-    <div class="bg-name" title="${item.label}">${item.label}</div>
-    <div class="bg-rate" style="color:${rc}">${r}%</div></div>`;
-}
-function renderGroups(elId,items,selArr){
-  const el=document.getElementById(elId);
-  if(!items.length){el.innerHTML='<div class="ph">Selecione um item acima.</div>';return;}
-  const max=Math.max(...items.map(i=>i.node.total),1);
-  el.innerHTML=items.map(i=>barGroup(i,max,selArr.includes(i.id))).join('');
-}
+function barGroup(item,maxTotal,selected){const h=v=>Math.max(maxTotal?v/maxTotal*110:0,2);const r=rate(item.node);const rc=r>50?'var(--green)':r>=25?'var(--gold)':'var(--red)';return `<div class="bg ${selected?'sel':''}" data-id="${encodeURIComponent(item.id)}"><div class="bars"><div class="bar" style="height:${h(item.node.total)}px;background:#8ca6bd" title="Total: ${item.node.total}"></div><div class="bar" style="height:${h(item.node.qual)}px;background:var(--green)" title="Qualificados: ${item.node.qual}"></div><div class="bar" style="height:${h(item.node.disq)}px;background:var(--red)" title="Desqualificados: ${item.node.disq}"></div></div><div class="bg-name" title="${item.label}">${item.label}</div><div class="bg-rate" style="color:${rc}">${r}%</div></div>`;}
+function renderGroups(elId,items,selArr){const el=document.getElementById(elId);if(!items.length){el.innerHTML='<div class="ph">Selecione um item acima.</div>';return;}const max=Math.max(...items.map(i=>i.node.total),1);el.innerHTML=items.map(i=>barGroup(i,max,selArr.includes(i.id))).join('');}
 
-// ----- Render principal -----
 function render(){
-  const open=ALL.filter(d=>d.win===null||d.win===undefined);
-  // REQ1 barras
+  const D=scoped();
+  const open=D.filter(d=>d.win===null||d.win===undefined);
+
+  // Req10 taxa geral
+  let q=0,dq=0;D.forEach(d=>{if(d.win===null||d.win===undefined){q++;return;}if(!inWindow(d.closed_at))return;if(isDesq(d))dq++;else q++;});
+  const tot=q+dq;
+  document.getElementById('k-taxa').textContent=(tot?Math.round(q/tot*100):0)+'%';
+  document.getElementById('k-open').textContent=fmt(open.length);
+  const vendasArr=D.filter(d=>d.win===true&&inWindow(d.closed_at));
+  document.getElementById('k-vendas').textContent=fmt(vendasArr.length);
+  document.getElementById('k-descartes').textContent=fmt(D.filter(d=>d.win===false&&inWindow(d.closed_at)).length);
+
+  // Req1
   const byStage={};open.forEach(d=>byStage[d.stage]=(byStage[d.stage]||0)+1);
   const stages=Object.keys(byStage).sort((a,b)=>stageRank(a)-stageRank(b));
   const maxStage=Math.max(...stages.map(s=>byStage[s]),1);
-  document.getElementById('stage-bars').innerHTML=stages.map((s,i)=>`<div class="brow"><div class="bname" title="${s}">${s}</div><div class="btrack"><div class="bfill" style="width:${Math.max(byStage[s]/maxStage*100,3)}%;background:${DONUT_COLORS[i%DONUT_COLORS.length]}"></div></div><div class="bval">${fmt(byStage[s])}</div></div>`).join('')||'<div class="ph">Nenhum lead em andamento.</div>';
+  document.getElementById('stage-bars').innerHTML=stages.map((s,i)=>`<div class="brow"><div class="bname" title="${s}">${s}</div><div class="btrack"><div class="bfill" style="width:${Math.max(byStage[s]/maxStage*100,3)}%;background:${DCOL[i%DCOL.length]}"></div></div><div class="bval">${fmt(byStage[s])}</div></div>`).join('')||'<div class="ph">Nenhum lead em andamento.</div>';
   const entries=stages.map(s=>[s,byStage[s]]);
   document.getElementById('donut').innerHTML=donutSVG(entries,open.length);
-  document.getElementById('donut-legend').innerHTML=entries.map((e,i)=>{const p=open.length?Math.round(e[1]/open.length*100):0;return `<div class="lg"><span class="dot" style="background:${DONUT_COLORS[i%DONUT_COLORS.length]}"></span><span title="${e[0]}">${e[0]}</span><span class="c">${fmt(e[1])} · ${p}%</span></div>`;}).join('');
-  // REQ2 funil
-  const cum=[0,0,0,0,0];
-  ALL.forEach(d=>{const mi=macroOf(d.stage);if(mi<0)return;let inc=false;if(d.win===null||d.win===undefined)inc=true;else inc=(!PERIOD)||(d.closed_at&&daysSince(d.closed_at)<=PERIOD);if(inc)for(let m=0;m<=mi;m++)cum[m]++;});
-  const base=cum[0]||1;
-  const vendas=ALL.filter(d=>d.win===true&&(!PERIOD||(d.closed_at&&daysSince(d.closed_at)<=PERIOD))).length;
+  document.getElementById('donut-legend').innerHTML=entries.map((e,i)=>{const p=open.length?Math.round(e[1]/open.length*100):0;return `<div class="lg"><span class="dot" style="background:${DCOL[i%DCOL.length]}"></span><span title="${e[0]}">${e[0]}</span><span class="c">${fmt(e[1])} · ${p}%</span></div>`;}).join('');
+
+  // Req2 funil
+  const cum=[0,0,0,0,0];D.forEach(d=>{const mi=macroOf(d.stage);if(mi<0)return;let inc=false;if(d.win===null||d.win===undefined)inc=true;else inc=inWindow(d.closed_at);if(inc)for(let m=0;m<=mi;m++)cum[m]++;});
+  const base=cum[0]||1;const vendas=vendasArr.length;
   const conv=[...MACROS.map((m,i)=>({label:m.label,color:m.color,val:cum[i]})),{label:'Venda',color:'#34c08a',val:vendas}];
   document.getElementById('conv').innerHTML=conv.map(c=>{const p=Math.round(c.val/base*100);return `<div class="crow"><div class="cname">${c.label}</div><div class="ctrack"><div class="cfill" style="width:${Math.max(c.val/base*100,4)}%;background:${c.color}">${fmt(c.val)}</div></div><div class="cval"><b>${p}%</b></div></div>`;}).join('');
-  // REQ3
-  HIER=buildHierarchy(ALL);
-  renderCanais();
-}
-function clearLower(level){
-  if(level<=1){selCamps=[];document.getElementById('lvl-camps').innerHTML='<div class="ph">Selecione um canal acima.</div>';document.getElementById('ctx-camp').textContent='';}
-  if(level<=2){selConjs=[];document.getElementById('lvl-conjs').innerHTML='<div class="ph">Selecione uma campanha acima.</div>';document.getElementById('ctx-conj').textContent='';}
-  document.getElementById('lvl-ads').innerHTML='<div class="ph">Selecione acima.</div>';
-  document.getElementById('ctx-ad').textContent='';
-}
-function renderCanais(){
-  selCanais=[];selCamps=[];selConjs=[];
-  const items=Object.keys(HIER).map(c=>({id:c,label:c,node:HIER[c]}));
-  renderGroups('lvl-canais',items,selCanais);
-  clearLower(1);
-}
-function renderCamps(){
-  const items=[];selCanais.forEach(ca=>Object.entries(HIER[ca].camps).forEach(([cm,node])=>items.push({id:ca+'||'+cm,label:cm,node})));
-  renderGroups('lvl-camps',items,selCamps);
-  document.getElementById('ctx-camp').textContent=selCanais.length?'— '+selCanais.join(' + '):'';
-}
-function hasRealConj(){return selCamps.some(id=>Object.keys(nodeByPath(id).conjs).some(k=>k!=='(sem conjunto)'));}
-function renderConjs(){
-  const real=hasRealConj();
-  document.getElementById('conj-wrap').style.display=real?'block':'none';
-  if(real){
-    const items=[];selCamps.forEach(id=>Object.entries(nodeByPath(id).conjs).forEach(([cj,node])=>{if(cj!=='(sem conjunto)')items.push({id:id+'||'+cj,label:cj,node});}));
-    renderGroups('lvl-conjs',items,selConjs);
-    document.getElementById('ctx-conj').textContent=selCamps.length?'— '+selCamps.map(i=>i.split('||')[1]).join(' + '):'';
-  }
-  renderAds();
-}
-function renderAds(){
-  const real=hasRealConj();const srcIds=real?selConjs:selCamps;
-  const agg={};
-  srcIds.forEach(id=>{const node=nodeByPath(id);Object.entries(adsOf(node)).forEach(([a,an])=>{if(a==='(sem anúncio)')return;agg[a]=agg[a]||blank();agg[a].total+=an.total;agg[a].qual+=an.qual;agg[a].disq+=an.disq;});});
-  const items=Object.entries(agg).map(([a,n])=>({id:'ad::'+a,label:a,node:n}));
-  const el=document.getElementById('lvl-ads');
-  if(!srcIds.length){el.innerHTML='<div class="ph">Selecione '+(real?'um conjunto':'uma campanha')+' acima.</div>';document.getElementById('ctx-ad').textContent='';return;}
-  if(!items.length){el.innerHTML='<div class="ph">Sem anúncios identificados para esta seleção.</div>';document.getElementById('ctx-ad').textContent='';return;}
-  const max=Math.max(...items.map(i=>i.node.total),1);
-  el.innerHTML=items.map(i=>barGroup(i,max,false)).join('');
-  document.getElementById('ctx-ad').textContent=real?'':'(direto da campanha)';
-}
-function toggle(arr,id){const i=arr.indexOf(id);if(i>=0)arr.splice(i,1);else arr.push(id);}
 
-// cliques (delegação)
-document.getElementById('lvl-canais').addEventListener('click',e=>{const g=e.target.closest('.bg');if(!g)return;toggle(selCanais,decodeURIComponent(g.dataset.id));clearLower(1);renderCanais2();});
+  // Req5 vendas (tabela)
+  const camps=new Set(),ads=new Set();vendasArr.forEach(v=>{if(v.campaign)camps.add(v.campaign);if(v.ad)ads.add(v.ad);});
+  document.getElementById('sales-sum').textContent=`${vendasArr.length} venda(s) no período · ${camps.size} campanha(s) · ${ads.size} anúncio(s)`;
+  document.getElementById('sales').innerHTML=vendasArr.length?`<table><thead><tr><th>Lead</th><th>Fonte</th><th>Campanha</th><th>Conjunto</th><th>Anúncio</th><th>Data</th></tr></thead><tbody>${vendasArr.sort((a,b)=>new Date(b.closed_at||0)-new Date(a.closed_at||0)).map(v=>`<tr><td class="name">${v.name||'—'}</td><td>${v.source||'—'}</td><td>${v.campaign||'—'}</td><td>${v.adset||'—'}</td><td>${v.ad||'—'}</td><td>${fmtDate(v.closed_at)}</td></tr>`).join('')}</tbody></table>`:'<div class="ph">Nenhuma venda no período selecionado.</div>';
+
+  // Req8 motivos
+  const lost=D.filter(d=>d.win===false&&inWindow(d.closed_at));
+  const oport={},desq={};lost.forEach(d=>{const r=d.lost_reason||'Não informado';if(isDesq(d))desq[r]=(desq[r]||0)+1;else oport[r]=(oport[r]||0)+1;});
+  const sum=o=>Object.values(o).reduce((a,b)=>a+b,0);const tO=sum(oport),tD=sum(desq),tL=tO+tD;
+  document.getElementById('loss-head').innerHTML=tL?`<b style="color:var(--text)">${tL}</b> descartes no período — <span style="color:var(--gold)">${Math.round(tO/tL*100)}% oportunidade perdida</span> · <span style="color:var(--red)">${Math.round(tD/tL*100)}% desqualificado</span>`:'Nenhum descarte no período.';
+  const lossRows=o=>{const e=Object.entries(o).sort((a,b)=>b[1]-a[1]);return e.length?e.map(([r,n])=>`<div class="lrow"><span>${r}</span><span style="font-family:Montserrat;font-weight:600">${n}</span></div>`).join(''):'<div class="ph">—</div>';};
+  document.getElementById('loss-oport').innerHTML=lossRows(oport);
+  document.getElementById('loss-desq').innerHTML=lossRows(desq);
+
+  // Req9 esfriando
+  const stale=open.filter(d=>{const dd=daysSince(d.last_activity_at||d.created_at);return dd!==null&&dd>COOL;}).sort((a,b)=>daysSince(b.last_activity_at||b.created_at)-daysSince(a.last_activity_at||a.created_at));
+  document.getElementById('cool').innerHTML=stale.length?`<div class="desc" style="margin-bottom:10px"><b style="color:var(--red)">${stale.length}</b> leads sem contato há mais de ${COOL} dias</div><table><thead><tr><th>Lead</th><th>Etapa</th><th>Corretor</th><th>Parado há</th></tr></thead><tbody>${stale.slice(0,15).map(d=>{const dd=daysSince(d.last_activity_at||d.created_at);return `<tr><td class="name">${d.name}</td><td style="color:var(--muted)">${d.stage}</td><td>${d.user}</td><td><span class="pill warn">${dd} dias</span></td></tr>`;}).join('')}</tbody></table>${stale.length>15?`<div class="ph">+${stale.length-15} outros</div>`:''}`:'<div class="ph">Nenhum lead esfriando nesse corte. 👏</div>';
+
+  // Req3
+  HIER=buildHierarchy(D);renderCanais();
+}
+
+function clearLower(level){if(level<=1){selCamps=[];document.getElementById('lvl-camps').innerHTML='<div class="ph">Selecione um canal acima.</div>';document.getElementById('ctx-camp').textContent='';}if(level<=2){selConjs=[];document.getElementById('lvl-conjs').innerHTML='<div class="ph">Selecione uma campanha acima.</div>';document.getElementById('ctx-conj').textContent='';}document.getElementById('lvl-ads').innerHTML='<div class="ph">Selecione acima.</div>';document.getElementById('ctx-ad').textContent='';}
+function renderCanais(){selCanais=[];selCamps=[];selConjs=[];const items=Object.keys(HIER).map(c=>({id:c,label:c,node:HIER[c]}));renderGroups('lvl-canais',items,selCanais);clearLower(1);}
 function renderCanais2(){const items=Object.keys(HIER).map(c=>({id:c,label:c,node:HIER[c]}));renderGroups('lvl-canais',items,selCanais);renderCamps();renderConjs();}
+function renderCamps(){const items=[];selCanais.forEach(ca=>Object.entries(HIER[ca].camps).forEach(([cm,node])=>items.push({id:ca+'||'+cm,label:cm,node})));renderGroups('lvl-camps',items,selCamps);document.getElementById('ctx-camp').textContent=selCanais.length?'— '+selCanais.join(' + '):'';}
+function hasRealConj(){return selCamps.some(id=>Object.keys(nodeByPath(id).conjs).some(k=>k!=='(sem conjunto)'));}
+function renderConjs(){const real=hasRealConj();document.getElementById('conj-wrap').style.display=real?'block':'none';if(real){const items=[];selCamps.forEach(id=>Object.entries(nodeByPath(id).conjs).forEach(([cj,node])=>{if(cj!=='(sem conjunto)')items.push({id:id+'||'+cj,label:cj,node});}));renderGroups('lvl-conjs',items,selConjs);document.getElementById('ctx-conj').textContent=selCamps.length?'— '+selCamps.map(i=>i.split('||')[1]).join(' + '):'';}renderAds();}
+function renderAds(){const real=hasRealConj();const srcIds=real?selConjs:selCamps;const agg={};srcIds.forEach(id=>{const node=nodeByPath(id);Object.entries(adsOf(node)).forEach(([a,an])=>{if(a==='(sem anúncio)')return;agg[a]=agg[a]||blank();agg[a].total+=an.total;agg[a].qual+=an.qual;agg[a].disq+=an.disq;});});const items=Object.entries(agg).map(([a,n])=>({id:'ad::'+a,label:a,node:n}));const el=document.getElementById('lvl-ads');if(!srcIds.length){el.innerHTML='<div class="ph">Selecione '+(real?'um conjunto':'uma campanha')+' acima.</div>';document.getElementById('ctx-ad').textContent='';return;}if(!items.length){el.innerHTML='<div class="ph">Sem anúncios pra esta seleção.</div>';document.getElementById('ctx-ad').textContent='';return;}const max=Math.max(...items.map(i=>i.node.total),1);el.innerHTML=items.map(i=>barGroup(i,max,false)).join('');document.getElementById('ctx-ad').textContent=real?'':'(direto da campanha)';}
+function toggle(arr,id){const i=arr.indexOf(id);if(i>=0)arr.splice(i,1);else arr.push(id);}
+document.getElementById('lvl-canais').addEventListener('click',e=>{const g=e.target.closest('.bg');if(!g)return;toggle(selCanais,decodeURIComponent(g.dataset.id));clearLower(1);renderCanais2();});
 document.getElementById('lvl-camps').addEventListener('click',e=>{const g=e.target.closest('.bg');if(!g)return;toggle(selCamps,decodeURIComponent(g.dataset.id));selConjs=[];renderCamps();renderConjs();});
 document.getElementById('lvl-conjs').addEventListener('click',e=>{const g=e.target.closest('.bg');if(!g)return;toggle(selConjs,decodeURIComponent(g.dataset.id));renderConjs();});
 
-async function loadData(){
-  document.getElementById('status').textContent='Atualizando…';
-  try{const res=await fetch('/api/deals');if(!res.ok)throw new Error('HTTP '+res.status);
-    const data=await res.json();if(data.error)throw new Error(data.error);
-    ALL=data.deals||[];STAGE_ORDER=data.stage_order||[];
-    document.getElementById('dash').style.display='block';render();
-    document.getElementById('status').textContent=`${fmt(ALL.length)} negócios carregados · atualizado às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
-  }catch(e){document.getElementById('status').innerHTML=`<div class="errbox">Não consegui carregar: ${e.message}. Tenta atualizar; se persistir, me chama.</div>`;}
-}
-document.getElementById('seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#seg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');PERIOD=Number(b.dataset.days);render();});
+// filtros
+function buildUserMenu(){const users=[...new Set(ALL.map(d=>d.user).filter(Boolean))].sort();const p=document.getElementById('usr-panel');p.innerHTML=users.map(u=>`<label><input type="checkbox" value="${u}"> ${u}</label>`).join('')||'<div class="ph">Sem corretores</div>';p.querySelectorAll('input').forEach(c=>c.addEventListener('change',()=>{SEL_USERS=[...p.querySelectorAll('input:checked')].map(x=>x.value);document.getElementById('usr-btn').textContent='Corretores: '+(SEL_USERS.length?SEL_USERS.length+' selec.':'Todos')+' ▾';render();}));}
+document.getElementById('usr-btn').addEventListener('click',()=>document.getElementById('usr-panel').classList.toggle('open'));
+document.addEventListener('click',e=>{if(!e.target.closest('.dd'))document.getElementById('usr-panel').classList.remove('open');});
+document.getElementById('seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#seg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(b.dataset.mode==='custom'){document.getElementById('range').classList.add('open');return;}document.getElementById('range').classList.remove('open');P={mode:'preset',days:Number(b.dataset.days),from:null,to:null};render();});
+document.getElementById('dt-apply').addEventListener('click',()=>{const f=document.getElementById('dt-from').value,t=document.getElementById('dt-to').value;if(!f||!t){alert('Escolha as duas datas.');return;}P={mode:'custom',days:0,from:f,to:t};render();});
+document.getElementById('cool-seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#cool-seg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');COOL=Number(b.dataset.cool);render();});
+
+async function loadData(){document.getElementById('status').textContent='Atualizando…';try{const res=await fetch('/api/deals');if(!res.ok)throw new Error('HTTP '+res.status);const data=await res.json();if(data.error)throw new Error(data.error);ALL=data.deals||[];STAGE_ORDER=data.stage_order||[];buildUserMenu();document.getElementById('dash').style.display='block';render();document.getElementById('status').textContent=`${fmt(ALL.length)} negócios · atualizado às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;}catch(e){document.getElementById('status').innerHTML=`<div class="errbox">Não consegui carregar: ${e.message}. Tenta atualizar; se persistir, me chama.</div>`;}}
 loadData();
 </script>
 </body>
